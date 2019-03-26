@@ -36,6 +36,15 @@ _driver_map = {
     "application/json": "json",
 }
 
+_kwargs_map = {
+    "text/csv": {
+        "csv_kwargs": {
+            "blocksize": None,
+            "sample": False
+        }
+    }
+}
+
 
 def _get_relevant_distribution(distributions):
     if not distributions or not len(distributions):
@@ -54,7 +63,10 @@ def _should_include_entry(dcat_entry):
 def _construct_entry(dcat_entry):
     name = dcat_entry["identifier"]
     distribution = _get_relevant_distribution(dcat_entry["distribution"])
-    args = {"urlpath": distribution["downloadURL"]}
+    args = {
+        "urlpath": distribution["downloadURL"],
+        **(_kwargs_map.get(distribution["mediaType"]) or {})
+    }
     description = dcat_entry["description"]
     driver = "csv"
     return LocalCatalogEntry(name, description, driver, True, args=args, metadata=dcat_entry)
