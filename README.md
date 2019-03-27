@@ -9,10 +9,11 @@ Many Socrata and ESRI data portals publish `data.json` files in this format desc
 Two examples of thes can be found at
 
 https://data.lacity.org/data.json
+
 http://geohub.lacity.org/data.json
 
 This project provides an opinionated way for users to load datasets from these catalogs into the scientific Python ecosystem.
-At the moment it loads CSVs into Pandas dataframes and GeoJSON data into GeoDataFrames.
+At the moment it loads CSVs into Pandas dataframes and GeoJSON files into GeoDataFrames, and ESRI Shapefiles into GeoDataFrames.
 Future formats could include plain JSON and ESRI Shapefiles.
 
 ## Requirements
