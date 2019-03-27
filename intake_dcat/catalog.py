@@ -7,12 +7,13 @@ from intake.catalog.local import LocalCatalogEntry
 
 
 class DCATCatalog(Catalog):
-    name: str = "dcat"
+    name: str
     url: str
 
-    def __init__(self, url, metadata=None):
+    def __init__(self, url, name, metadata=None, **kwargs):
         self.url = url
-        super().__init__(metadata)
+        self.name = name
+        super().__init__(name=name, metadata=metadata, **kwargs)
 
     def _load(self):
         resp = requests.get(self.url)
@@ -43,6 +44,7 @@ def _get_relevant_distribution(dcat_entry):
         return None
     for key in mediaTypes:
         for distribution in distributions:
+            if distribution["mediaType"] == key:
                 return distribution
     return None
 
