@@ -23,50 +23,56 @@ class DCATCatalog(Catalog):
             if _should_include_entry(entry)
         }
 
+def _get_relevant_distribution(dcat_entry):
+    """
+    Given a DCAT entry, find the most relevant distribution
+    for the intake catalog. In general, we choose the more specific
+    formats over the less specific formats. At present, they
+    are ranked in the following order:
 
-_container_map = {
-    "application/vnd.geo+json": "dataframe",
-    "text/csv": "dataframe",
-    "application/json": "dataframe",
-}
+        GeoJSON
+        CSV
 
-_driver_map = {
-    "application/vnd.geo+json": "geojson",
-    "text/csv": "csv",
-    "application/json": "json",
-}
+    If none of these are found, None.
+    If there are no distributions, it returns None.
+    """
+    mediaTypes = ["application/vnd.geo+json", "text/csv"]
+    distributions = dcat_entry.get("distribution")
 
-_kwargs_map = {
-    "text/csv": {
-        "csv_kwargs": {
-            "blocksize": None,
-            "sample": False
-        }
-    }
-}
-
-
-def _get_relevant_distribution(distributions):
     if not distributions or not len(distributions):
         return None
-    for key in _container_map:
+    for key in mediaTypes:
         for distribution in distributions:
-            if distribution.get("mediaType") == key:
                 return distribution
-    return distributions[0]
+    return None
 
 
 def _should_include_entry(dcat_entry):
-    return dcat_entry.get("distribution") != None
+    return _get_relevant_distribution(dcat_entry) != None
 
 
 def _construct_entry(dcat_entry):
-    name = dcat_entry["identifier"]
-    distribution = _get_relevant_distribution(dcat_entry["distribution"])
-    args = {
-        "urlpath": distribution["downloadURL"],
-        **(_kwargs_map.get(distribution["mediaType"]) or {})
+    driver_map = {
+        "application/vnd.geo+json": "geojson",
+        "text/csv": "csv",
     }
-    description = dcat_entry["description"]
-    driver = "csv"
+    kwargs_map = {
+        "text/csv": {
+            "csv_kwargs": {
+                "blocksize": None,
+                "sample": False
+            }
+        }
+    }
+
+    name = dcat_entry["identifier"]
+    distribution = _get_relevant_distribution(dcat_entry)
+    mediaType = distribution["mediaType"]
+    url = distribution["downloadURL"]
+    args = {
+        "urlpath": url,
+        **(kwargs_map.get(mediaType) or {})
+    }
+    description = f"## {dcat_entry['title']}\n\n{dcat_entry['description']}"
+    driver = driver_map[mediaType]
     return LocalCatalogEntry(name, description, driver, True, args=args, metadata=dcat_entry)
