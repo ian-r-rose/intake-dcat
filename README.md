@@ -24,6 +24,11 @@ intake_geopandas
 ## Installation
 
 Currently a work in progress, requires some unpublished versions of packages.
+You can test the functionality by creating a conda enviromnent and then opening the example notebook:
+```bash
+conda env create -f environment.yml
+jupyter lab
+```
 
 ### Usage
 

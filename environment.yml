@@ -1,0 +1,11 @@
+name: intake-dcat
+channels:
+  - conda-forge
+dependencies:
+  - python=3
+  - geopandas
+  - intake
+  - jupyterlab
+  - pip:
+    - git+https://github.com/ian-r-rose/dask@full-sample
+    - git+https://github.com/ian-r-rose/intake_geopandas@multiple-input-sources
