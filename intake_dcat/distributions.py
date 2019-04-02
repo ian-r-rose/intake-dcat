@@ -65,7 +65,7 @@ def geojson_driver_args(distribution):
     Construct driver args for a GeoJSON distribution.
     """
     url = distribution["downloadURL"]
-    return {"urlpath": url}
+    return {"uri": url}
 
 
 def csv_driver_args(distribution):
@@ -73,7 +73,7 @@ def csv_driver_args(distribution):
     Construct driver args for a GeoJSON distribution.
     """
     url = distribution["downloadURL"]
-    return {"urlpath": url, "csv_kwargs": {"blocksize": None, "sample": False}}
+    return {"uri": url, "csv_kwargs": {"blocksize": None, "sample": False}}
 
 
 def shapefile_driver_args(distribution):
@@ -81,7 +81,7 @@ def shapefile_driver_args(distribution):
     Construct driver args for a GeoJSON distribution.
     """
     url = distribution["downloadURL"]
-    args = {"urlpath": url, "geopandas_kwargs": {}}
+    args = {"uri": url, "geopandas_kwargs": {}}
     if distribution["mediaType"] == "application/zip":
         args["geopandas_kwargs"]["compression"] = "zip"
     return args
