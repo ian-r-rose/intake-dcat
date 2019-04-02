@@ -60,21 +60,25 @@ class DCATEntry(LocalCatalogEntry):
         driver, args = get_relevant_distribution(dcat_entry)
         name = dcat_entry["identifier"]
         description = f"## {dcat_entry['title']}\n\n{dcat_entry['description']}"
+        metadata = {
+            'dcat': dcat_entry
+        }
         super().__init__(
-            name, description, driver, True, args=args, metadata=dcat_entry
+            name, description, driver, True, args=args, metadata=metadata
         )
 
     def _repr_mimebundle_(self, include=None, exclude=None):
         """
         Print an HTML repr for the entry
         """
-        title = self.metadata.get('title') or 'unknown'
-        entry_id = self.metadata.get('identifier')
-        description = self.metadata.get('description')
-        issued = self.metadata.get('issued') or 'unknown'
-        modified = self.metadata.get('modified') or 'unknown'
-        license = self.metadata.get('license') or 'unknown'
-        organization = self.metadata.get('publisher')
+        dcat = self.metadata['dcat']
+        title = dcat.get('title') or 'unknown'
+        entry_id = dcat.get('identifier')
+        description = dcat.get('description')
+        issued = dcat.get('issued') or 'unknown'
+        modified = dcat.get('modified') or 'unknown'
+        license = dcat.get('license') or 'unknown'
+        organization = dcat.get('publisher')
         publisher = organization.get('name') or 'unknown' if organization else 'unknown'
         download = self._open_args.get('uri') or self._open_args.get('urlpath') or 'unknown'
 
