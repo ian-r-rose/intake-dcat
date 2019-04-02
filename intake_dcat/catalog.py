@@ -44,7 +44,7 @@ class DCATCatalog(Catalog):
         resp = requests.get(self.url)
         catalog = resp.json()
         self._entries = {
-            entry["identifier"]: construct_entry(entry)
+            entry["identifier"]: DCATEntry(entry)
             for entry in catalog["dataset"]
             if should_include_entry(entry)
         }
@@ -53,6 +53,17 @@ class DCATEntry(LocalCatalogEntry):
     """
     A class representign a DCAT catalog entry, which knows how to pretty-print itself.
     """
+    def __init__(self, dcat_entry):
+        """
+        Construct an Intake catalog entry from a DCAT catalog entry.
+        """
+        driver, args = get_relevant_distribution(dcat_entry)
+        name = dcat_entry["identifier"]
+        description = f"## {dcat_entry['title']}\n\n{dcat_entry['description']}"
+        super().__init__(
+            name, description, driver, True, args=args, metadata=dcat_entry
+        )
+
     def _repr_mimebundle_(self, include=None, exclude=None):
         """
         Print an HTML repr for the entry
@@ -65,7 +76,7 @@ class DCATEntry(LocalCatalogEntry):
         license = self.metadata.get('license') or 'unknown'
         organization = self.metadata.get('publisher')
         publisher = organization.get('name') or 'unknown' if organization else 'unknown'
-        download = self._open_args['uri'] or 'unknown'
+        download = self._open_args.get('uri') or self._open_args.get('urlpath') or 'unknown'
 
         info = f"""
             <p><b>ID:</b><a href="{entry_id}"> {entry_id}</a></p>
@@ -102,15 +113,3 @@ def should_include_entry(dcat_entry):
     Shapefile, CSV), False otherwise.
     """
     return get_relevant_distribution(dcat_entry) != None
-
-
-def construct_entry(dcat_entry):
-    """
-    Construct an Intake catalog entry from a DCAT catalog entry.
-    """
-    driver, args = get_relevant_distribution(dcat_entry)
-    name = dcat_entry["identifier"]
-    description = f"## {dcat_entry['title']}\n\n{dcat_entry['description']}"
-    return DCATEntry(
-        name, description, driver, True, args=args, metadata=dcat_entry
-    )
