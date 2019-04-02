@@ -49,6 +49,51 @@ class DCATCatalog(Catalog):
             if should_include_entry(entry)
         }
 
+class DCATEntry(LocalCatalogEntry):
+    """
+    A class representign a DCAT catalog entry, which knows how to pretty-print itself.
+    """
+    def _repr_mimebundle_(self, include=None, exclude=None):
+        """
+        Print an HTML repr for the entry
+        """
+        title = self.metadata.get('title') or 'unknown'
+        entry_id = self.metadata.get('identifier')
+        description = self.metadata.get('description')
+        issued = self.metadata.get('issued') or 'unknown'
+        modified = self.metadata.get('modified') or 'unknown'
+        license = self.metadata.get('license') or 'unknown'
+        organization = self.metadata.get('publisher')
+        publisher = organization.get('name') or 'unknown' if organization else 'unknown'
+        download = self._open_args['uri'] or 'unknown'
+
+        info = f"""
+            <p><b>ID:</b><a href="{entry_id}"> {entry_id}</a></p>
+            <p><b>Issued:</b> {issued}</p>
+            <p><b>Last Modified:</b> {modified}</p>
+            <p><b>Publisher:</b> {publisher}</p>
+            <p><b>License:</b> {license}</p>
+            <p><b>Download URL:</b><a href="{download}"> {download}</a></p>
+        """
+        html = f"""
+        <h3>{title}</h3>
+        <div style="display: flex; flex-direction: row; flex-wrap: wrap; height:256px">
+            <div style="flex: 0 0 256px; padding-right: 24px">
+                {info}
+            </div>
+            <div style="flex: 1 1 0; height: 100%; overflow: auto">
+                <p>
+                    {description}
+                </p>
+            </div>
+        </div>
+        """
+
+        return {
+            'text/html' : html,
+            'text/plain': "\n".join([entry_id, title, description])
+        }
+
 
 def should_include_entry(dcat_entry):
     """
@@ -66,6 +111,6 @@ def construct_entry(dcat_entry):
     driver, args = get_relevant_distribution(dcat_entry)
     name = dcat_entry["identifier"]
     description = f"## {dcat_entry['title']}\n\n{dcat_entry['description']}"
-    return LocalCatalogEntry(
+    return DCATEntry(
         name, description, driver, True, args=args, metadata=dcat_entry
     )
