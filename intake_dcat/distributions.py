@@ -73,7 +73,7 @@ def csv_driver_args(distribution):
     Construct driver args for a GeoJSON distribution.
     """
     url = distribution["downloadURL"]
-    return {"uri": url, "csv_kwargs": {"blocksize": None, "sample": False}}
+    return {"urlpath": url, "csv_kwargs": {"blocksize": None, "sample": False}}
 
 
 def shapefile_driver_args(distribution):
