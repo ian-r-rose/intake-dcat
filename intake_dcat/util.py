@@ -1,6 +1,5 @@
 import copy
 import os
-from functools import reduce
 
 import requests
 import yaml
