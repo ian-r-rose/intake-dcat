@@ -80,7 +80,7 @@ class DCATEntry(LocalCatalogEntry):
         license = dcat.get('license') or 'unknown'
         organization = dcat.get('publisher')
         publisher = organization.get('name') or 'unknown' if organization else 'unknown'
-        download = self._open_args.get('uri') or self._open_args.get('urlpath') or 'unknown'
+        download = self._open_args.get('urlpath') or 'unknown'
 
         info = f"""
             <p><b>ID:</b><a href="{entry_id}"> {entry_id}</a></p>
