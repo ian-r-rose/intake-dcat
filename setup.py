@@ -22,6 +22,7 @@ setup(
         'requests',
         'pyyaml',
         'intake >= 0.4.3',
+        's3fs',
     ],
     license='Apache-2.0 license',
     zip_safe=False,
