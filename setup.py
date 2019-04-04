@@ -19,6 +19,8 @@ setup(
     package_dir={'intake-dcat': 'intake-dcat'},
     include_package_data=True,
     install_requires=[
+        'requests',
+        'pyyaml',
         'intake >= 0.4.3',
     ],
     license='Apache-2.0 license',

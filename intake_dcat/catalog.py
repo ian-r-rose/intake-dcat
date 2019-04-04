@@ -17,6 +17,7 @@ class DCATCatalog(Catalog):
     Shapefile
     CSV
     """
+
     name: str
     url: str
 
@@ -49,10 +50,12 @@ class DCATCatalog(Catalog):
             if should_include_entry(entry)
         }
 
+
 class DCATEntry(LocalCatalogEntry):
     """
     A class representign a DCAT catalog entry, which knows how to pretty-print itself.
     """
+
     def __init__(self, dcat_entry):
         """
         Construct an Intake catalog entry from a DCAT catalog entry.
@@ -60,27 +63,23 @@ class DCATEntry(LocalCatalogEntry):
         driver, args = get_relevant_distribution(dcat_entry)
         name = dcat_entry["identifier"]
         description = f"## {dcat_entry['title']}\n\n{dcat_entry['description']}"
-        metadata = {
-            'dcat': dcat_entry
-        }
-        super().__init__(
-            name, description, driver, True, args=args, metadata=metadata
-        )
+        metadata = {"dcat": dcat_entry}
+        super().__init__(name, description, driver, True, args=args, metadata=metadata)
 
     def _repr_mimebundle_(self, include=None, exclude=None):
         """
         Print an HTML repr for the entry
         """
-        dcat = self.metadata['dcat']
-        title = dcat.get('title') or 'unknown'
-        entry_id = dcat.get('identifier')
-        description = dcat.get('description')
-        issued = dcat.get('issued') or 'unknown'
-        modified = dcat.get('modified') or 'unknown'
-        license = dcat.get('license') or 'unknown'
-        organization = dcat.get('publisher')
-        publisher = organization.get('name') or 'unknown' if organization else 'unknown'
-        download = self._open_args.get('urlpath') or 'unknown'
+        dcat = self.metadata["dcat"]
+        title = dcat.get("title") or "unknown"
+        entry_id = dcat.get("identifier")
+        description = dcat.get("description")
+        issued = dcat.get("issued") or "unknown"
+        modified = dcat.get("modified") or "unknown"
+        license = dcat.get("license") or "unknown"
+        organization = dcat.get("publisher")
+        publisher = organization.get("name") or "unknown" if organization else "unknown"
+        download = self._open_args.get("urlpath") or "unknown"
 
         info = f"""
             <p><b>ID:</b><a href="{entry_id}"> {entry_id}</a></p>
@@ -105,8 +104,8 @@ class DCATEntry(LocalCatalogEntry):
         """
 
         return {
-            'text/html' : html,
-            'text/plain': "\n".join([entry_id, title, description])
+            "text/html": html,
+            "text/plain": "\n".join([entry_id, title, description]),
         }
 
 
