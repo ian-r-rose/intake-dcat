@@ -4,8 +4,8 @@ channels:
 dependencies:
   - python=3
   - geopandas
-  - intake
+  - intake=0.4.4
   - jupyterlab
   - pip:
-    - git+https://github.com/ian-r-rose/dask@full-sample
+    - git+https://github.com/dask/dask@master
     - git+https://github.com/ian-r-rose/intake_geopandas@multiple-input-sources
