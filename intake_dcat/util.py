@@ -13,7 +13,7 @@ from .catalog import DCATCatalog
 fs = s3fs.S3FileSystem()
 
 
-def mirror_data(manifest_file):
+def mirror_data(manifest_file, upload=True):
     """
     Given a path the a manifest.yml file, download the relevant data,
     upload it to the specified bucket, and return a new catalog
@@ -23,6 +23,10 @@ def mirror_data(manifest_file):
     ----------
     manifest_file: str
         A path to a manifest file.
+
+    upload: boolean
+        Whether to upload the datasets to the indicated bucket. Defaults to
+        True, but can be set to false to perform a dry run.
 
     Returns
     -------
@@ -38,7 +42,9 @@ def mirror_data(manifest_file):
             for name, id in items.items():
                 entry = yaml.safe_load(catalog[id].yaml())["sources"][id]
                 print(f"Mirroring {name}")
-                new_entry = _construct_remote_entry(bucket_uri, entry, name)
+                new_entry = _construct_remote_entry(
+                    bucket_uri, entry, name, upload=upload
+                )
                 new_catalog["sources"][name] = new_entry
 
     return new_catalog
@@ -52,12 +58,13 @@ def _upload_remote_data(old_uri, new_uri, dir=None):
         fs.put(filename, new_uri)
 
 
-def _construct_remote_entry(bucket_uri, entry, name, directory=""):
+def _construct_remote_entry(bucket_uri, entry, name, directory="", upload=True):
     new_entry = copy.deepcopy(entry)
     old_uri = entry["args"]["urlpath"]
     new_uri = _construct_remote_uri(bucket_uri, entry, name, directory)
     new_entry["args"]["urlpath"] = new_uri
-    _upload_remote_data(old_uri, new_uri)
+    if upload:
+        _upload_remote_data(old_uri, new_uri)
     return new_entry
 
 
