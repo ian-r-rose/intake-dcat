@@ -62,11 +62,9 @@ class Create(Subcommand):
     def invoke(self, args):
         version = args.version or None
         name = args.name or ""
-        catalog = DCATCatalog(args.uri, name=name)
-        new_catalog = {"metadata": {"name": name, "version": version}, "sources": {}}
-        for key, entry in catalog.items():
-            new_catalog["sources"][key] = yaml.safe_load(entry.yaml())["sources"][key]
-        print(yaml.dump(new_catalog))
+        metadata = {"name": name, "version": version}
+        catalog = DCATCatalog(args.uri, name=name, metadata=metadata)
+        print(catalog.serialize())
 
 
 subcommands = [Mirror, Create]
