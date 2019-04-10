@@ -28,10 +28,18 @@ class Mirror(Subcommand):
             help="If this flag is given, no upload occurs",
             action="store_true",
         )
+        self.parser.add_argument(
+            "--version", metavar="VERSION", type=str, help="Catalog version"
+        )
+        self.parser.add_argument(
+            "--name", metavar="VERSION", type=str, help="Catalog name"
+        )
 
     def invoke(self, args):
         upload = not args.dry_run
-        catalog = mirror_data(args.manifest, upload=upload)
+        catalog = mirror_data(
+            args.manifest, upload=upload, name=args.name, version=args.version
+        )
         print(yaml.dump(catalog))
 
 
