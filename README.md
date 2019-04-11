@@ -14,12 +14,12 @@ http://geohub.lacity.org/data.json
 
 This project provides an opinionated way for users to load datasets from these catalogs into the scientific Python ecosystem.
 At the moment it loads CSVs into Pandas dataframes and GeoJSON files into GeoDataFrames, and ESRI Shapefiles into GeoDataFrames.
-Future formats could include plain JSON and ESRI Shapefiles.
+Future formats could include plain JSON and Parquet.
 
 ## Requirements
 ```
-intake >= 4.3
-intake_geopandas
+intake >= 0.4.4
+intake_geopandas >= 0.2.0
 ```
 ## Installation
 
@@ -45,18 +45,24 @@ catalog = DCATCatalog('http://geohub.lacity.org/data.json', name='geohub')
 len(list(catalog))
 ```
 
-You can then list the items in the catalog
+You can display the items in the catalog
 ```python
-for entry_id in catalog:
-    print(entry_id, catalog[entry_id].description)
+for entry_id, entry in catalog.items():
+    display(entry)
+```
+
+If the catalog has too many entries to comfortably print all at once,
+you can narrow it by searching for a term (e.g. 'district'):
+```python
+for entry_id, entry in catalog.search('district').items():
+  display(entry)
 ```
 
 ### Loading a dataset
 Once you have identified a dataset, you can load it into a dataframe using `read()`:
 
 ```python
-df = catalog[entry_id].read()
+df = entry.read()
 ```
 
 This will automatically load that dataset into a Pandas dataframe, or a GeoDataFrame, depending on the source format.
-
