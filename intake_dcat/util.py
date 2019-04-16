@@ -13,7 +13,7 @@ from .catalog import DCATCatalog
 fs = s3fs.S3FileSystem()
 
 
-def mirror_data(manifest_file, upload=True):
+def mirror_data(manifest_file, upload=True, name=None, version=None):
     """
     Given a path the a manifest.yml file, download the relevant data,
     upload it to the specified bucket, and return a new catalog
@@ -32,7 +32,7 @@ def mirror_data(manifest_file, upload=True):
     -------
     A dictionary containing data for the new catalog.
     """
-    new_catalog = {"sources": {}}
+    new_catalog = {"metadata": {"name": name, "version": version}, "sources": {}}
     with open(manifest_file) as f:
         manifest = yaml.safe_load(f)
         for catalog_name, catalog_data in manifest.items():

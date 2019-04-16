@@ -1,4 +1,5 @@
 import requests
+import yaml
 
 from intake.catalog import Catalog
 from intake.catalog.local import LocalCatalogEntry
@@ -49,6 +50,19 @@ class DCATCatalog(Catalog):
             for entry in catalog["dataset"]
             if should_include_entry(entry)
         }
+
+    def serialize(self):
+        """
+        Serialize the catalog to yaml.
+
+        Returns
+        -------
+        A string with the yaml-formatted catalog.
+        """
+        output = {"metadata": self.metadata, "sources": {}}
+        for key, entry in self.items():
+            output["sources"][key] = yaml.safe_load(entry.yaml())["sources"][key]
+        return yaml.dump(output)
 
 
 class DCATEntry(LocalCatalogEntry):

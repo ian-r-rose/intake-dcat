@@ -66,3 +66,54 @@ df = entry.read()
 ```
 
 This will automatically load that dataset into a Pandas dataframe, or a GeoDataFrame, depending on the source format.
+
+### Command Line Interface
+
+`intake-dcat` provides a small command line interface for some common operations.
+These are invoked using `intake-dcat <subcommand> <options>`
+
+#### The `mirror` command
+
+This command loads a manifest file that lists a set of DCAT entries,
+uploads them to a specified s3 bucket, and outputs a new catalog with identical entries
+pointing to the bucket.
+
+An example manifest is given by
+```yml
+# Name of the LA open data portal
+la-open-data:
+  # URL to the open data portal catalog
+  url: https://data.lacity.org/data.json
+  # The s3 bucket to upload the data to
+  bucket_uri: s3://my-bucket
+  # A list of data resources to mirror
+  items:
+    lapd_metrics: https://data.lacity.org/api/views/t6kt-2yic
+# Name of the LA GeoHub data portal
+la-geohub:
+  # URL to the open data portal catalog
+  url: http://geohub.lacity.org/data.json
+  # The s3 bucket to upload the data to
+  bucket_uri: s3://my-bucket
+  # A list of data resources to mirror
+  items:
+    bikeways: http://geohub.lacity.org/datasets/2602345a7a8549518e8e3c873368c1d9_0 
+    city_boundary: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7
+```
+
+This can be mirrored using the command
+
+```bash
+intake-dcat mirror manifest.yml > new-catalog.yml
+```
+
+This command uses the `boto3` library and assumes it can find AWS credentials.
+
+#### The `create` command
+
+This command creates a new intake catalog from a DCAT catalog, and outputs it to standard out.
+An example command is given by
+
+```bash
+intake-dcat create data.lacity.org/data.json > catalog.yml
+```
