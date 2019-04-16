@@ -21,7 +21,8 @@ setup(
     install_requires=[
         'requests',
         'pyyaml',
-        'intake >= 0.4.3',
+        'intake >= 0.4.4',
+        'intake-geopandas>=0.2.1',
         's3fs',
     ],
     license='Apache-2.0 license',

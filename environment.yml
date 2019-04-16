@@ -1,11 +1,11 @@
 name: intake-dcat
 channels:
   - conda-forge
+  - informaticslab
 dependencies:
   - python=3
   - geopandas
   - intake=0.4.4
+  - intake_geopandas=0.2.1
   - jupyterlab
-  - pip:
-    - git+https://github.com/dask/dask@master
-    - git+https://github.com/ian-r-rose/intake_geopandas@multiple-input-sources
+  - dask=1.2.0
