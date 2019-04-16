@@ -41,7 +41,6 @@ def mirror_data(manifest_file, upload=True, name=None, version=None):
             items = catalog_data["items"]
             for name, id in items.items():
                 entry = yaml.safe_load(catalog[id].yaml())["sources"][id]
-                print(f"Mirroring {name}")
                 new_entry = _construct_remote_entry(
                     bucket_uri, entry, name, upload=upload
                 )
