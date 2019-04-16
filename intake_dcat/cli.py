@@ -11,12 +11,19 @@ from .util import mirror_data
 
 class Mirror(Subcommand):
     """
-    Mirror a catalog subset specified in a manifest to a remote bucket.
+    Mirror a catalog subset specified in a manifest to a remote bucket,
+    and print the resulting subsetted catalog to stdout.
+
+
+    If --dry-run is specified, then no upload happens, but the catalog is still printed.
     """
 
     name = "mirror"
 
     def initialize(self):
+        """
+        Initialize the subcommand by adding the argparser arguments.
+        """
         self.parser.add_argument(
             "manifest",
             type=str,
@@ -36,6 +43,9 @@ class Mirror(Subcommand):
         )
 
     def invoke(self, args):
+        """
+        Invoke the command.
+        """
         upload = not args.dry_run
         catalog = mirror_data(
             args.manifest, upload=upload, name=args.name, version=args.version
@@ -51,6 +61,9 @@ class Create(Subcommand):
     name = "create"
 
     def initialize(self):
+        """
+        Initialize the subcommand by adding the argparser arguments.
+        """
         self.parser.add_argument("uri", metavar="URI", type=str, help="Catalog URI")
         self.parser.add_argument(
             "--version", metavar="VERSION", type=str, help="Catalog version"
@@ -60,6 +73,9 @@ class Create(Subcommand):
         )
 
     def invoke(self, args):
+        """
+        Invoke the command.
+        """
         version = args.version or None
         name = args.name or ""
         metadata = {"name": name, "version": version}
