@@ -19,10 +19,11 @@ setup(
     package_dir={'intake-dcat': 'intake-dcat'},
     include_package_data=True,
     install_requires=[
-        'requests',
-        'pyyaml',
+        'geopandas>0.5'
         'intake >= 0.4.4',
-        'intake-geopandas>=0.2.1',
+        'intake-geopandas>=0.2.2',
+        'pyyaml>5',
+        'requests',
         's3fs',
     ],
     entry_points={
