@@ -4,8 +4,8 @@ channels:
   - informaticslab
 dependencies:
   - python=3
-  - geopandas
+  - geopandas=0.5
   - intake=0.4.4
-  - intake_geopandas=0.2.1
+  - intake_geopandas=0.2.2
   - jupyterlab
   - dask=1.2.0
