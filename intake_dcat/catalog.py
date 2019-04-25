@@ -80,7 +80,7 @@ class DCATEntry(LocalCatalogEntry):
         metadata = {"dcat": dcat_entry}
         super().__init__(name, description, driver, True, args=args, metadata=metadata)
 
-    def _repr_mimebundle_(self, include=None, exclude=None):
+    def _ipython_display_(self):
         """
         Print an HTML repr for the entry
         """
@@ -96,12 +96,12 @@ class DCATEntry(LocalCatalogEntry):
         download = self._open_args.get("urlpath") or "unknown"
 
         info = f"""
-            <p><b>ID:</b><a href="{entry_id}"> {entry_id}</a></p>
-            <p><b>Issued:</b> {issued}</p>
-            <p><b>Last Modified:</b> {modified}</p>
-            <p><b>Publisher:</b> {publisher}</p>
-            <p><b>License:</b> {license}</p>
-            <p><b>Download URL:</b><a href="{download}"> {download}</a></p>
+            <p style="margin-bottom: 0.5em"><b>ID:</b><a href="{entry_id}"> {entry_id}</a></p>
+            <p style="margin-bottom: 0.5em"><b>Issued:</b> {issued}</p>
+            <p style="margin-bottom: 0.5em"><b>Last Modified:</b> {modified}</p>
+            <p style="margin-bottom: 0.5em"><b>Publisher:</b> {publisher}</p>
+            <p style="margin-bottom: 0.5em"><b>License:</b> {license}</p>
+            <p style="margin-bottom: 0.5em"><b>Download URL:</b><a href="{download}"> {download}</a></p>
         """
         html = f"""
         <h3>{title}</h3>
@@ -117,10 +117,10 @@ class DCATEntry(LocalCatalogEntry):
         </div>
         """
 
-        return {
+        return display({
             "text/html": html,
             "text/plain": "\n".join([entry_id, title, description]),
-        }
+        }, raw=True)
 
 
 def should_include_entry(dcat_entry):

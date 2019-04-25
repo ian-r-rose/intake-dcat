@@ -1,5 +1,7 @@
 # intake-dcat
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/CityOfLosAngeles/intake-dcat/master?urlpath=lab%2Ftree%2Fexamples%2Fdemo.ipynb)
+
 This is an [intake](https://intake.readthedocs.io/en/latest)
 data source for [DCAT](https://www.w3.org/TR/vocab-dcat) catalogs.
 
@@ -19,16 +21,18 @@ Future formats could include plain JSON and Parquet.
 ## Requirements
 ```
 intake >= 0.4.4
-intake_geopandas >= 0.2.0
+intake_geopandas >= 0.2.2
+geopandas >= 0.5.0
 ```
 ## Installation
 
-Currently a work in progress, requires some unpublished versions of packages.
-You can test the functionality by creating a conda enviromnent and then opening the example notebook:
+`intake-dcat` is published on PyPI.
+You can install it by running the following in your terminal:
 ```bash
-conda env create -f environment.yml
-jupyter lab
+pip install intake-dcat
 ```
+
+You can test the functionality by opening the example notebooks in the `examples/` directory:
 
 ### Usage
 
@@ -108,6 +112,7 @@ intake-dcat mirror manifest.yml > new-catalog.yml
 ```
 
 This command uses the `boto3` library and assumes it can find AWS credentials.
+For more information see [this documentation](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html).
 
 #### The `create` command
 
