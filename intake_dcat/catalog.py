@@ -80,7 +80,7 @@ class DCATEntry(LocalCatalogEntry):
         metadata = {"dcat": dcat_entry}
         super().__init__(name, description, driver, True, args=args, metadata=metadata)
 
-    def _repr_mimebundle_(self, include=None, exclude=None):
+    def _ipython_display_(self):
         """
         Print an HTML repr for the entry
         """
@@ -117,10 +117,10 @@ class DCATEntry(LocalCatalogEntry):
         </div>
         """
 
-        return {
+        return display({
             "text/html": html,
             "text/plain": "\n".join([entry_id, title, description]),
-        }
+        }, raw=True)
 
 
 def should_include_entry(dcat_entry):
