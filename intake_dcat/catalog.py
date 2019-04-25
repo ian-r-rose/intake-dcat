@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 import requests
 import yaml
 
@@ -5,6 +7,7 @@ from intake.catalog import Catalog
 from intake.catalog.local import LocalCatalogEntry
 
 from .distributions import get_relevant_distribution
+from . import _version
 
 
 class DCATCatalog(Catalog):
@@ -18,11 +21,10 @@ class DCATCatalog(Catalog):
     Shapefile
     CSV
     """
+    name: ClassVar[str] = 'dcat'
+    version: ClassVar[str] = _version
 
-    name: str
-    url: str
-
-    def __init__(self, url, name, metadata=None, **kwargs):
+    def __init__(self, url, name='catalog', items=None, metadata=None, **kwargs):
         """
         Initialize the catalog.
 
