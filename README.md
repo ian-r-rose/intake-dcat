@@ -1,5 +1,7 @@
 # intake-dcat
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/CityOfLosAngeles/intake-dcat/master?urlpath=lab%2Ftree%2Fexamples%2Fdemo.ipynb)
+
 This is an [intake](https://intake.readthedocs.io/en/latest)
 data source for [DCAT](https://www.w3.org/TR/vocab-dcat) catalogs.
 

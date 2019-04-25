@@ -1,0 +1,13 @@
+name: intake-dcat
+channels:
+  - conda-forge
+  - informaticslab
+dependencies:
+  - python=3
+  - geopandas>=0.5
+  - intake>=0.4.4
+  - intake_geopandas>=0.2.2
+  - dask>=1.2.0
+  - pip:
+    - intake-dcat==0.1.0
+    - jupyterlab==1.0.0a3
