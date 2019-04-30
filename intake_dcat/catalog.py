@@ -114,7 +114,7 @@ class DCATEntry(LocalCatalogEntry):
         html = f"""
         <h3>{title}</h3>
         <div style="display: flex; flex-direction: row; flex-wrap: wrap; height:256px">
-            <div style="flex: 0 0 256px; padding-right: 24px">
+            <div style="flex: 0 0 384px; padding-right: 24px">
                 {info}
             </div>
             <div style="flex: 1 1 0; height: 100%; overflow: auto">
