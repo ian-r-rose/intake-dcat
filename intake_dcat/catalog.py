@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 import requests
 import yaml
 
@@ -5,6 +7,7 @@ from intake.catalog import Catalog
 from intake.catalog.local import LocalCatalogEntry
 
 from .distributions import get_relevant_distribution
+from . import _version
 
 
 class DCATCatalog(Catalog):
@@ -19,10 +22,10 @@ class DCATCatalog(Catalog):
     CSV
     """
 
-    name: str
-    url: str
+    name: ClassVar[str] = "dcat"
+    version: ClassVar[str] = _version
 
-    def __init__(self, url, name, metadata=None, **kwargs):
+    def __init__(self, url, name="catalog", items=None, metadata=None, **kwargs):
         """
         Initialize the catalog.
 
@@ -32,11 +35,16 @@ class DCATCatalog(Catalog):
             A URL pointing to a DCAT catalog, usually named data.json
         name: str
             A name for the catalog
+        items: Dict[str, str]
+            A mapping of {name: id} of entries to include.
+            The name is a human-redable name, and the id is the DCAT identifier.
+            If `None` is given, then all entries are included.
         metadata: dict
             Additional information about the catalog
         """
         self.url = url
         self.name = name
+        self._items = items
         super().__init__(name=name, metadata=metadata, **kwargs)
 
     def _load(self):
@@ -48,7 +56,7 @@ class DCATCatalog(Catalog):
         self._entries = {
             entry["identifier"]: DCATEntry(entry)
             for entry in catalog["dataset"]
-            if should_include_entry(entry)
+            if should_include_entry(entry, self._items)
         }
 
     def serialize(self):
@@ -106,7 +114,7 @@ class DCATEntry(LocalCatalogEntry):
         html = f"""
         <h3>{title}</h3>
         <div style="display: flex; flex-direction: row; flex-wrap: wrap; height:256px">
-            <div style="flex: 0 0 256px; padding-right: 24px">
+            <div style="flex: 0 0 384px; padding-right: 24px">
                 {info}
             </div>
             <div style="flex: 1 1 0; height: 100%; overflow: auto">
@@ -117,16 +125,22 @@ class DCATEntry(LocalCatalogEntry):
         </div>
         """
 
-        return display({
-            "text/html": html,
-            "text/plain": "\n".join([entry_id, title, description]),
-        }, raw=True)
+        return display(
+            {
+                "text/html": html,
+                "text/plain": "\n".join([entry_id, title, description]),
+            },
+            raw=True,
+        )
 
 
-def should_include_entry(dcat_entry):
+def should_include_entry(dcat_entry, items=None):
     """
     Return if a given DCAT entry should be included in the dataset.
     Returns True if we can find a driver to load it (GeoJSON,
     Shapefile, CSV), False otherwise.
     """
+    vals = list(items.values()) if items else []
+    if items is not None and dcat_entry["identifier"] not in vals:
+        return False
     return get_relevant_distribution(dcat_entry) != None

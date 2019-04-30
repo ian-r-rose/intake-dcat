@@ -35,10 +35,10 @@ def mirror_data(manifest_file, upload=True, name=None, version=None):
     new_catalog = {"metadata": {"name": name, "version": version}, "sources": {}}
     with open(manifest_file) as f:
         manifest = yaml.safe_load(f)
-        for catalog_name, catalog_data in manifest.items():
-            catalog = DCATCatalog(catalog_data["url"], name=catalog_name)
-            bucket_uri = catalog_data["bucket_uri"]
-            items = catalog_data["items"]
+        bucket_uri = manifest["metadata"]["bucket_uri"]
+        for catalog_name, catalog_data in manifest["sources"].items():
+            catalog = DCATCatalog(catalog_data["args"]["url"], name=catalog_name)
+            items = catalog_data["args"]["items"]
             for name, id in items.items():
                 entry = yaml.safe_load(catalog[id].yaml())["sources"][id]
                 new_entry = _construct_remote_entry(
