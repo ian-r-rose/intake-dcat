@@ -5,9 +5,9 @@ channels:
 dependencies:
   - python=3
   - geopandas>=0.5
-  - intake>=0.4.4
+  - intake>=0.5.0
   - intake_geopandas>=0.2.2
   - dask>=1.2.0
   - pip:
-    - intake-dcat==0.1.0
+    - intake-dcat==0.2.0
     - jupyterlab==1.0.0a3
