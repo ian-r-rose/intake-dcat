@@ -20,7 +20,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'geopandas>=0.5',
-        'intake>=0.4.4',
+        'intake>=0.5',
         'intake-geopandas>=0.2.2',
         'pyyaml>=5',
         'requests',
