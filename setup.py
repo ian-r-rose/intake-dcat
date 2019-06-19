@@ -22,7 +22,7 @@ setup(
         'geopandas>=0.5',
         'intake>=0.5',
         'intake-geopandas>=0.2.2',
-        'pyyaml>=5',
+        'pyyaml',
         'requests',
         's3fs',
     ],
