@@ -52,7 +52,7 @@ def test_shapefile(distribution):
     Test if a DCAT:distribution is a Shapefile.
     """
     # TODO: can there be a more robust test here?
-    url = distribution.get("downloadURL") or ""
+    url = distribution.get("downloadURL") or distribution.get("accessURL") or ""
     title = distribution.get("title") or ""
     return (
         title.lower() == "shapefile"
@@ -64,7 +64,9 @@ def geojson_driver_args(distribution):
     """
     Construct driver args for a GeoJSON distribution.
     """
-    url = distribution["downloadURL"]
+    url = distribution.get("downloadURL") or distribution.get("accessURL")
+    if not url:
+        raise KeyError(f"A download URL was not found for {str(distribution)}")
     return {"urlpath": url}
 
 
@@ -72,7 +74,9 @@ def csv_driver_args(distribution):
     """
     Construct driver args for a GeoJSON distribution.
     """
-    url = distribution["downloadURL"]
+    url = distribution.get("downloadURL") or distribution.get("accessURL")
+    if not url:
+        raise KeyError(f"A download URL was not found for {str(distribution)}")
     return {"urlpath": url, "csv_kwargs": {"blocksize": None, "sample": False}}
 
 
@@ -80,7 +84,9 @@ def shapefile_driver_args(distribution):
     """
     Construct driver args for a GeoJSON distribution.
     """
-    url = distribution["downloadURL"]
+    url = distribution.get("downloadURL") or distribution.get("accessURL")
+    if not url:
+        raise KeyError(f"A download URL was not found for {str(distribution)}")
     args = {"urlpath": url, "geopandas_kwargs": {}}
     if distribution["mediaType"] == "application/zip":
         args["geopandas_kwargs"]["compression"] = "zip"
