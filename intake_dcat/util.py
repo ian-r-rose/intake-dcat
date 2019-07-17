@@ -60,20 +60,20 @@ def _upload_remote_data(old_uri, new_uri, dir=None):
 def _construct_remote_entry(bucket_uri, entry, name, directory="", upload=True):
     new_entry = copy.deepcopy(entry)
     old_uri = entry["args"]["urlpath"]
-    new_uri = _construct_remote_uri(bucket_uri, entry, name, directory)
-    new_entry["args"]["urlpath"] = new_uri
+    upload_uri = _construct_remote_uri(bucket_uri, entry, name, directory)
+    compression = _get_compression_for_entry(entry)
+    access_uri = f"{compression}+{upload_uri}" if compression else upload_uri
+    new_entry["args"]["urlpath"] = access_uri
     if upload:
-        _upload_remote_data(old_uri, new_uri)
+        _upload_remote_data(old_uri, upload_uri)
     return new_entry
 
 
 def _construct_remote_uri(bucket_uri, entry, name, directory=""):
     urlpath = entry["args"].get("urlpath")
     ext = _get_extension_for_entry(entry)
-    compression = _get_compression_for_entry(entry)
     key = f"{directory.strip('/')}/{name}{ext}" if directory else f"{name}{ext}"
-    uri = f"{bucket_uri.strip('/')}/{key}"
-    return f"{compression}+{uri}" if compression else uri
+    return f"{bucket_uri.strip('/')}/{key}"
 
 
 def _get_extension_for_entry(intake_entry):
