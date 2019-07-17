@@ -70,8 +70,10 @@ def _construct_remote_entry(bucket_uri, entry, name, directory="", upload=True):
 def _construct_remote_uri(bucket_uri, entry, name, directory=""):
     urlpath = entry["args"].get("urlpath")
     ext = _get_extension_for_entry(entry)
+    compression = _get_compression_for_entry(entry)
     key = f"{directory.strip('/')}/{name}{ext}" if directory else f"{name}{ext}"
-    return f"{bucket_uri.strip('/')}/{key}"
+    uri = f"{bucket_uri.strip('/')}/{key}"
+    return f"{compression}+{uri}" if compression else uri
 
 
 def _get_extension_for_entry(intake_entry):
@@ -94,7 +96,7 @@ def _get_extension_for_entry(intake_entry):
     elif (
         driver == "shapefile" or driver == "intake_geopandas.geopandas.ShapefileSource"
     ):
-        compression = args.get("geopandas_kwargs", {}).get("compression")
+        compression = _get_compression_for_entry(intake_entry)
         if compression == "zip":
             return ".zip"
         elif not compression:
@@ -105,3 +107,25 @@ def _get_extension_for_entry(intake_entry):
         return ".csv"
     else:
         raise ValueError(f"Unsupported driver {driver}")
+
+
+def _get_compression_for_entry(intake_entry):
+    """
+    Given an intake catalog entry, determine a compression scheme, if
+    applicable. Fiona uses compound protocols like 'zip+s3://' to construct
+    paths for GDAL, and we need to construct that properly.
+
+    Returns a string scheme like "zip", "gzip",  or "tar". If no compression
+    scheme is used, returns `None`.
+    """
+    driver = intake_entry.get("driver")
+    if (
+        driver == "geojson"
+        or driver == "shapefile"
+        or driver == "intake_geopandas.geopandas.GeoJSONSource"
+        or driver == "intake_geopandas.geopandas.ShapefileSource"
+    ):
+        args = intake_entry.get("args", {})
+        return args.get("geopandas_kwargs", {}).get("compression")
+    else:
+        return None
