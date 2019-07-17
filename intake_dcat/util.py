@@ -62,7 +62,7 @@ def _construct_remote_entry(bucket_uri, entry, name, directory="", upload=True):
     old_uri = entry["args"]["urlpath"]
     new_uri = _construct_remote_uri(bucket_uri, entry, name, directory)
     new_entry["args"]["urlpath"] = new_uri
-    if False:
+    if upload:
         _upload_remote_data(old_uri, new_uri)
     return new_entry
 
