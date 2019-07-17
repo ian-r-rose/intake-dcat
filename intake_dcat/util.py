@@ -60,15 +60,72 @@ def _upload_remote_data(old_uri, new_uri, dir=None):
 def _construct_remote_entry(bucket_uri, entry, name, directory="", upload=True):
     new_entry = copy.deepcopy(entry)
     old_uri = entry["args"]["urlpath"]
-    new_uri = _construct_remote_uri(bucket_uri, entry, name, directory)
-    new_entry["args"]["urlpath"] = new_uri
+    upload_uri = _construct_remote_uri(bucket_uri, entry, name, directory)
+    compression = _get_compression_for_entry(entry)
+    access_uri = f"{compression}+{upload_uri}" if compression else upload_uri
+    new_entry["args"]["urlpath"] = access_uri
     if upload:
-        _upload_remote_data(old_uri, new_uri)
+        _upload_remote_data(old_uri, upload_uri)
     return new_entry
 
 
 def _construct_remote_uri(bucket_uri, entry, name, directory=""):
     urlpath = entry["args"].get("urlpath")
-    _, ext = os.path.splitext(urlpath)
+    ext = _get_extension_for_entry(entry)
     key = f"{directory.strip('/')}/{name}{ext}" if directory else f"{name}{ext}"
     return f"{bucket_uri.strip('/')}/{key}"
+
+
+def _get_extension_for_entry(intake_entry):
+    """
+    Given an intake catalog entry, return a file extension for it, which can
+    be used to construct names when re-uploading the files to s3. It would be
+    nice to be able to rely on extensions in the URL, but that is not
+    particularly reliable. Instead, we infer an extension from the driver and
+    args that are used. The following extensions are returned:
+
+        GeoJSON: ".geojson"
+        Zipped Shapefile: ".zip"
+        Shapefile: ".shp"
+        CSV: ".csv"
+    """
+    driver = intake_entry.get("driver")
+    args = intake_entry.get("args", {})
+    if driver == "geojson" or driver == "intake_geopandas.geopandas.GeoJSONSource":
+        return ".geojson"
+    elif (
+        driver == "shapefile" or driver == "intake_geopandas.geopandas.ShapefileSource"
+    ):
+        compression = _get_compression_for_entry(intake_entry)
+        if compression == "zip":
+            return ".zip"
+        elif not compression:
+            return ".shp"
+        else:
+            raise ValueError(f"Unexpected compression scheme for {str(intake_entry)}")
+    elif driver == "csv" or driver == "intake.source.csv.CSVSource":
+        return ".csv"
+    else:
+        raise ValueError(f"Unsupported driver {driver}")
+
+
+def _get_compression_for_entry(intake_entry):
+    """
+    Given an intake catalog entry, determine a compression scheme, if
+    applicable. Fiona uses compound protocols like 'zip+s3://' to construct
+    paths for GDAL, and we need to construct that properly.
+
+    Returns a string scheme like "zip", "gzip",  or "tar". If no compression
+    scheme is used, returns `None`.
+    """
+    driver = intake_entry.get("driver")
+    if (
+        driver == "geojson"
+        or driver == "shapefile"
+        or driver == "intake_geopandas.geopandas.GeoJSONSource"
+        or driver == "intake_geopandas.geopandas.ShapefileSource"
+    ):
+        args = intake_entry.get("args", {})
+        return args.get("geopandas_kwargs", {}).get("compression")
+    else:
+        return None
