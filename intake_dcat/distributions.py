@@ -87,7 +87,5 @@ def shapefile_driver_args(distribution):
     url = distribution.get("downloadURL") or distribution.get("accessURL")
     if not url:
         raise KeyError(f"A download URL was not found for {str(distribution)}")
-    args = {"urlpath": url, "geopandas_kwargs": {}}
-    if distribution["mediaType"] == "application/zip":
-        args["geopandas_kwargs"]["compression"] = "zip"
+    args = {"urlpath": url}
     return args
