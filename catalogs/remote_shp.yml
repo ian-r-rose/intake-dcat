@@ -1,0 +1,11 @@
+metadata:
+  version: 1
+sources:
+  build_permit_data:
+    driver: shapefile
+    args:
+      urlpath: 'http://geohub.lacity.org/datasets/012fa761d1124ef48be59a5ac22d13e6_190.zip'
+    
+      
+      
+      

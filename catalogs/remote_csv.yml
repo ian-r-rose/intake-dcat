@@ -1,0 +1,20 @@
+metadata:
+  version: 1
+sources:        
+  housing_data:  
+    driver: csv 
+    args:       
+        urlpath: 'https://data.lacity.org/api/views/vxhy-r447/rows.csv?accessType=DOWNLOAD'
+        csv_kwargs:             #allows me to download the file type without 'Bad URL error'
+            blocksize: null       
+            sample: false
+  affordable_data: 
+    driver: csv
+    args:
+        urlpath: 'https://data.lacity.org/api/views/u4mj-cwbz/rows.csv?accessType=DOWNLOAD'
+        csv_kwargs:
+            blocksize: null
+            sample: false
+ 
+      
+     

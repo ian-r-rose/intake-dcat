@@ -1,0 +1,20 @@
+metadata:
+  version: 1
+sources:
+  #Local Shapefiles
+  la_city:
+    driver: shapefile
+    args:
+      urlpath: 'zip://{{ CATALOG_DIR }}/City_Boundary.zip'
+  la_county:
+    driver: shapefile
+    args:
+      urlpath: 'zip://{{ CATALOG_DIR }}/County_Boundary.zip'
+  county_stations:
+    driver: shapefile
+    args:
+      urlpath: 'zip://{{ CATALOG_DIR }}/County_Fueling_Stations.zip'
+  alternative_fuel:
+    driver: shapefile
+    args:
+      urlpath: 'zip://{{ CATALOG_DIR }}/Alternative_Fuel.zip'
