@@ -1,0 +1,7 @@
+metadata:
+  version: 1
+sources:
+  chinook:
+    driver: sql_cat
+    args:
+      uri: 'sqlite:///local_files/chinook.db'

@@ -4,16 +4,16 @@ sources:
   la_county:
     driver: csv
     args:
-      urlpath: '{{ CATALOG_DIR }}/County_Boundary.csv'
+      urlpath: './local_files/County_Boundary.csv'
   county_fuel:
     driver: csv
     args:
-      urlpath: '{{ CATALOG_DIR }}/County_Fueling_Stations.csv'
+      urlpath: './local_files/County_Fueling_Stations.csv'
   alternative_fuel:
     driver: csv
     args:
-        urlpath: '{{ CATALOG_DIR }}/Alternative_Fuel.csv'
+        urlpath: './local_files/Alternative_Fuel.csv'
   la_city:
     driver: csv
     args:
-        urlpath: '{{ CATALOG_DIR }}/City_Boundary.csv'
+        urlpath: './local_files/City_Boundary.csv'

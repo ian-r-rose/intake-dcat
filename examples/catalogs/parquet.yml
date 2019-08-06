@@ -5,17 +5,17 @@ sources:
   la_county:
     driver: parquet
     args:
-      urlpath: '{{ CATALOG_DIR }}/county_boundary.parq'
+      urlpath: './local_files/county_boundary.parq'
   county_fuel:
     driver: parquet
     args:
-      urlpath: '{{ CATALOG_DIR }}/county_fueling_stations.parq'
+      urlpath: './local_files//county_fueling_stations.parq'
   alternative_fuel:
     driver: parquet
     args:
-        urlpath: '{{ CATALOG_DIR }}/alternative_fueling_stations.parq'
+        urlpath: './local_files/alternative_fueling_stations.parq'
   la_city:
     driver: parquet
     args:
-        urlpath: '{{ CATALOG_DIR }}/city_boundary.parq'
+        urlpath: './local_files/city_boundary.parq'
         
