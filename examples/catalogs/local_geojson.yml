@@ -1,0 +1,7 @@
+metadata:
+  version: 1
+sources:
+  cultural_data:
+    driver: geojson
+    args:
+      urlpath: './local_files/Cultural_and_Performing_Arts_Centers.geojson'

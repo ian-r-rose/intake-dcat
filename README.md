@@ -23,6 +23,7 @@ Future formats could include plain JSON and Parquet.
 intake >= 0.4.4
 intake_geopandas >= 0.2.2
 geopandas >= 0.5.0
+intake-parquet
 ```
 ## Installation
 
