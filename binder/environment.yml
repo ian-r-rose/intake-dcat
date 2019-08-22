@@ -1,15 +1,15 @@
 name: intake-dcat
 channels:
   - conda-forge
-  - informaticslab
 dependencies:
   - descartes
   - geopandas>=0.5
-  - intake>=0.5.0
-  - intake_geopandas>=0.2.2
+  - intake==0.5.3
   - intake-parquet
   - matplotlib
   - python=3
   - pip:
     - intake-dcat
     - jupyterlab
+    - intake_geopandas>=0.2.2
+    - git+https://github.com/intake/intake-sql.git
