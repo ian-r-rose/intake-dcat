@@ -37,8 +37,10 @@ class DCATCatalog(Catalog):
             A name for the catalog
         items: Dict[str, str]
             A mapping of {name: id} of entries to include.
-            The name is a human-redable name, and the id is the DCAT identifier.
-            If `None` is given, then all entries are included.
+            The name is a human-readable name, and the id is the DCAT identifier.
+            These items will be available in the catalog under the human-readable name.
+            If `None` is given, then all entries are included, and keyed using
+            their DCAT identifier.
         metadata: dict
             Additional information about the catalog
         """
@@ -53,11 +55,21 @@ class DCATCatalog(Catalog):
         """
         resp = requests.get(self.url)
         catalog = resp.json()
-        self._entries = {
-            entry["identifier"]: DCATEntry(entry)
-            for entry in catalog["dataset"]
-            if should_include_entry(entry, self._items)
-        }
+        if self._items is not None:
+            self._entries = {}
+            for key, identifier in self._items.items():
+                entry = next(
+                    (e for e in catalog["dataset"] if e["identifier"] == identifier),
+                    None,
+                )
+                if entry and should_include_entry(entry):
+                    self._entries[key] = DCATEntry(entry)
+        else:
+            self._entries = {
+                entry["identifier"]: DCATEntry(entry)
+                for entry in catalog["dataset"]
+                if should_include_entry(entry)
+            }
 
     def serialize(self):
         """
@@ -134,13 +146,10 @@ class DCATEntry(LocalCatalogEntry):
         )
 
 
-def should_include_entry(dcat_entry, items=None):
+def should_include_entry(dcat_entry):
     """
     Return if a given DCAT entry should be included in the dataset.
     Returns True if we can find a driver to load it (GeoJSON,
     Shapefile, CSV), False otherwise.
     """
-    vals = list(items.values()) if items else []
-    if items is not None and dcat_entry["identifier"] not in vals:
-        return False
     return get_relevant_distribution(dcat_entry) != None
