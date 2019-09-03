@@ -26,7 +26,10 @@ setup(
         "requests",
         "s3fs",
     ],
-    entry_points={"console_scripts": ["intake-dcat = intake_dcat.cli:main"]},
+    entry_points={
+        "console_scripts": ["intake-dcat = intake_dcat.cli:main"],
+        "intake.drivers": ["dcat = intake_dcat.catalog:DCATCatalog"],
+    },
     license="Apache-2.0 license",
     zip_safe=False,
     keywords="intake dcat",
