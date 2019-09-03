@@ -4,7 +4,7 @@ sources:
   # Here we have two data sources for this catalog, which are themselves
   # DCAT catalogs, one for LA open data, and the other for LA GeoHub
   la_open_data:
-    # We identify them as being loaded with the GeoHub
+    # We identify them as being loaded with the DCAT driver
     driver: dcat
     # Here we specify the args used to load the catalog
     args:

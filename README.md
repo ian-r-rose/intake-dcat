@@ -23,7 +23,6 @@ Future formats could include plain JSON and Parquet.
 intake >= 0.4.4
 intake_geopandas >= 0.2.2
 geopandas >= 0.5.0
-intake-parquet
 ```
 ## Installation
 
@@ -33,7 +32,7 @@ You can install it by running the following in your terminal:
 pip install intake-dcat
 ```
 
-You can test the functionality by opening the example notebooks in the `examples/` directory:
+You can test the functionality by opening the example notebooks in the `examples/` directory
 
 ### Usage
 
@@ -71,6 +70,45 @@ df = entry.read()
 ```
 
 This will automatically load that dataset into a Pandas dataframe, or a GeoDataFrame, depending on the source format.
+
+### Specifying catalogs
+
+You can read a `DCATCatalog` directly in Python using a URL, as done above,
+but it is also possible to write a catalog file that itself contains `DCATCatalog` entries.
+This allows you to more easily specify DCAT catalogs for use in distribution and version control.
+
+For instance, this YAML file creates entries for two open data catalogs:
+
+```yaml
+metadata:
+  version: 1
+sources:
+  # Here we have two data sources for this catalog, which are themselves
+  # DCAT catalogs, one for LA open data, and the other for LA GeoHub
+  la_open_data:
+    # We identify them as being loaded with the DCAT driver
+    driver: dcat
+    # Here we specify the args used to load the catalog
+    args:
+      # The URL to the catalog
+      url: https://data.lacity.org/data.json
+      # An optional name for the catalog.
+      name: la-open-data
+  la_geohub:
+    driver: dcat
+    args:
+      url: http://geohub.lacity.org/data.json
+      name: la_geohub
+      # We can also specify a subset of the datasets in the catalog using an "items"
+      # dictionary. If these are specified, only these datasets will be available in
+      # the resulting catalog. They will be available under the more human-readable
+      # name specified as the key.
+      items:
+        # So, this dataset will be available as "bikeways"
+        bikeways: http://geohub.lacity.org/datasets/2602345a7a8549518e8e3c873368c1d9_0
+        city_boundary: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7
+        bike_racks: http://geohub.lacity.org/datasets/3b022cced9704108af157d3d5eedb268_2
+```
 
 ### Command Line Interface
 
