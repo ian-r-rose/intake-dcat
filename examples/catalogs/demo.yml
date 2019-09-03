@@ -1,17 +1,28 @@
 metadata:
   version: 1
 sources:
+  # Here we have two data sources for this catalog, which are themselves
+  # DCAT catalogs, one for LA open data, and the other for LA GeoHub
   la_open_data:
+    # We identify them as being loaded with the GeoHub
     driver: dcat
+    # Here we specify the args used to load the catalog
     args:
+      # The URL to the catalog
       url: https://data.lacity.org/data.json
+      # An optional name for the catalog.
       name: la-open-data
   la_geohub:
     driver: dcat
     args:
       url: http://geohub.lacity.org/data.json
       name: la_geohub
+      # We can also specify a subset of the datasets in the catalog using an "items"
+      # dictionary. If these are specified, only these datasets will be available in
+      # the resulting catalog. They will be available under the more human-readable
+      # name specified as the key.
       items:
+        # So, this dataset will be available as "bikeways"
         bikeways: http://geohub.lacity.org/datasets/2602345a7a8549518e8e3c873368c1d9_0 
         city_boundary: http://geohub.lacity.org/datasets/09f503229d37414a8e67a7b6ceb9ec43_7
         bike_racks: http://geohub.lacity.org/datasets/3b022cced9704108af157d3d5eedb268_2
