@@ -37,14 +37,20 @@ def test_geojson(distribution):
     """
     Test if a DCAT:distribution is GeoJSON.
     """
-    return distribution.get("mediaType") == "application/vnd.geo+json"
+    return (
+        distribution.get("mediaType") == "application/vnd.geo+json"
+        or distribution.get("format", "").lower() == "geojson"
+    )
 
 
 def test_csv(distribution):
     """
     Test if a DCAT:distribution is CSV.
     """
-    return distribution.get("mediaType") == "text/csv"
+    return (
+        distribution.get("mediaType") == "text/csv"
+        or distribution.get("format", "").lower() == "csv"
+    )
 
 
 def test_shapefile(distribution):
@@ -53,9 +59,11 @@ def test_shapefile(distribution):
     """
     # TODO: can there be a more robust test here?
     url = distribution.get("downloadURL") or distribution.get("accessURL") or ""
-    title = distribution.get("title") or ""
+    title = distribution.get("title", "").lower()
+    format = distribution.get("format", "").lower()
     return (
-        title.lower() == "shapefile"
+        title == "shapefile"
+        or format == "shapefile"
         or re.search("format=shapefile", url, re.I) is not None
     )
 
