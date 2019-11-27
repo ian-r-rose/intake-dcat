@@ -122,7 +122,7 @@ class DCATEntry(LocalCatalogEntry):
             <p style="margin-bottom: 0.5em"><b>Publisher:</b> {publisher}</p>
             <p style="margin-bottom: 0.5em"><b>License:</b> {license}</p>
             <p style="margin-bottom: 0.5em"><b>Download URL:</b><a href="{download}"> {download}</a></p>
-        """
+        """  # noqa: E501
         html = f"""
         <h3>{title}</h3>
         <div style="display: flex; flex-direction: row; flex-wrap: wrap; height:256px">
@@ -137,7 +137,7 @@ class DCATEntry(LocalCatalogEntry):
         </div>
         """
 
-        return display(
+        return display(  # noqa: F821
             {
                 "text/html": html,
                 "text/plain": "\n".join([entry_id, title, description]),
@@ -152,4 +152,4 @@ def should_include_entry(dcat_entry):
     Returns True if we can find a driver to load it (GeoJSON,
     Shapefile, CSV), False otherwise.
     """
-    return get_relevant_distribution(dcat_entry) != None
+    return get_relevant_distribution(dcat_entry) is not None

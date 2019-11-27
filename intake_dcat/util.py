@@ -1,5 +1,4 @@
 import copy
-import os
 
 import requests
 import yaml
@@ -70,7 +69,6 @@ def _construct_remote_entry(bucket_uri, entry, name, directory="", upload=True):
 
 
 def _construct_remote_uri(bucket_uri, entry, name, directory=""):
-    urlpath = entry["args"].get("urlpath")
     ext = _get_extension_for_entry(entry)
     key = f"{directory.strip('/')}/{name}{ext}" if directory else f"{name}{ext}"
     return f"{bucket_uri.strip('/')}/{key}"
@@ -90,7 +88,6 @@ def _get_extension_for_entry(intake_entry):
         CSV: ".csv"
     """
     driver = intake_entry.get("driver")
-    args = intake_entry.get("args", {})
     if driver == "geojson" or driver == "intake_geopandas.geopandas.GeoJSONSource":
         return ".geojson"
     elif (
